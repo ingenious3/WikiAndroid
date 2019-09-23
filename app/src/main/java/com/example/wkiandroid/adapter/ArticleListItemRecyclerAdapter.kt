@@ -5,9 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wkiandroid.R
 import com.example.wkiandroid.holders.ListItemHolder
+import com.example.wkiandroid.models.WikiPage
 
 class ArticleListItemRecyclerAdapter() : RecyclerView.Adapter<ListItemHolder>() {
 
+    val currentResults : ArrayList<WikiPage> = ArrayList<WikiPage>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListItemHolder {
         var listItem = LayoutInflater.from(parent?.context).inflate(R.layout.article_list_item, parent, false)
@@ -15,11 +17,11 @@ class ArticleListItemRecyclerAdapter() : RecyclerView.Adapter<ListItemHolder>() 
     }
 
     override fun onBindViewHolder(holder: ListItemHolder, position: Int) {
-
+        var page = currentResults[position]
+        holder.updateWithPage(page)
     }
 
     override fun getItemCount(): Int {
-        return 15
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return currentResults.size
     }
 }

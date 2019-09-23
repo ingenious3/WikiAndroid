@@ -7,10 +7,17 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wkiandroid.R
+import com.example.wkiandroid.adapter.ArticleListItemRecyclerAdapter
+import com.example.wkiandroid.provider.ArticleDataProvider
 import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : AppCompatActivity() {
+
+    private val articleProvide : ArticleDataProvider = ArticleDataProvider()
+
+    private var adapter : ArticleListItemRecyclerAdapter = ArticleListItemRecyclerAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +25,10 @@ class SearchActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        search_results_recycler.layoutManager = LinearLayoutManager(this)
+        search_results_recycler.adapter = adapter
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -42,8 +53,11 @@ class SearchActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String): Boolean {
 
                 // do the search and update the elements
-
-                println("updated search")
+                articleProvide.search(query,0,20 , { wikiResult ->
+                    adapter.currentResults.clear()
+                    adapter.currentResults.addAll(wikiResult.query!!.pages)
+                    runOnUiThread { adapter.notifyDataSetChanged()}
+                })
 
                 return false
             }
